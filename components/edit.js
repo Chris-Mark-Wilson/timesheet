@@ -1,20 +1,27 @@
-import { styles } from "./weekView"
-import { View, Text, TextInput, Pressable } from "react-native";
+import { styles } from "./styles/styles.js"
+import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import { useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Edit=({today,currentDay,setCurrentDay,setIsEditing})=>{
+    const [tempText, setTempText] = useState(currentDay.text?currentDay.text:'');
 
-    const onChangeText = (text) => {
-        console.log(text);
-        setCurrentDay((prev) => {
-          const newDay = { ...prev };
-          newDay.text = text;
-          return newDay;
-        });
-      };
 
-      const save=()=>{
-        
+      const save=async()=>{
+        try {
+await AsyncStorage.setItem(currentDay.date.toDateString(),tempText)
+console.log('Data saved')
+setCurrentDay((prev) => {
+    const newDay = { ...prev };
+    newDay.text = tempText;
+    return newDay;
+  });
+        }
+        catch(e){
+            Alert.alert('Error saving data')
+          console.log(e)
+        }
+setIsEditing (false)
       }
 return(
      <View style={styles.editView}>
@@ -29,12 +36,12 @@ return(
                     multiline
                     numberOfLines={40}
                     maxLength={500}
-                    onChangeText={(text)=>onChangeText(text)}
-                    value={currentDay.text?currentDay.text:''}
+                    onChangeText={(text)=>setTempText(text)}
+                    value={tempText}
                     style={styles.textInput}
                   /> 
             
-              <Text style={styles.preview}>{currentDay.text?currentDay.text:'No Data to show'}</Text>
+              <Text style={styles.preview}>{tempText}</Text>
               <View style={styles.navButtons}>
     
               <Pressable style={styles.button} onPress={() => setIsEditing(false)}>
