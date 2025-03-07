@@ -17,14 +17,9 @@ export const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <WeekView />
+      </View>
 
-      <Pressable
-        style={styles.button}
-        onPress={() => navigation.navigate("Add Entry")}
-      >
-        <Text style={styles.buttonText}>Add Entry</Text>
-      </Pressable>
-    </View>
+   
   );
 };
 
