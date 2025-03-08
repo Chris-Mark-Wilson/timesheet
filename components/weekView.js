@@ -1,12 +1,11 @@
 import { View, Text,ScrollView } from "react-native";
-import { StyleSheet,Pressable,TextInput } from "react-native";
+import { Pressable } from "react-native";
 import { useEffect, useState } from "react";
 import { Edit } from "./edit";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from "./styles/styles";
 export const WeekView = () => {
   const today = new Date();
-  const [date, setDate] = useState(new Date());
   const [weekEnding, setWeekEnding] = useState(today);
   const [days,setDays]=useState([{day:'mon'},{day:'tue'},{day:'wed'},{day:'thur'},{day:'fri'},{day:'sat'},{day:'sun'}])
   const [isEditing,setIsEditing]=useState(false)
@@ -65,7 +64,7 @@ export const WeekView = () => {
     }
   };
 
-  const edit=((day,weekEnd)=>{
+  const edit=((day)=>{
 
 setCurrentDay(day)
 
@@ -109,7 +108,7 @@ setIsEditing(true)
                 <Pressable
                   key={day.day}
                   style={styles.listItem}
-                  onPress={(e) => edit(day, weekEnding)}
+                  onPress={(e) => edit(day)}
                 >
                   <Text>{day.date && day.date.toDateString()}</Text>
                   <Text style={styles.preview}>

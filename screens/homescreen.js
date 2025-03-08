@@ -3,9 +3,8 @@ import {View,Text} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet } from "react-native";
 
-import { Pressable } from 'react-native';
 import { WeekView } from "../components/weekView";
-import { useState,useEffect } from 'react';
+
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -16,6 +15,7 @@ export const HomeScreen = () => {
  
   return (
     <View style={styles.container}>
+      <Text>Testing build</Text>
       <WeekView />
       </View>
 
