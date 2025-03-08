@@ -75,30 +75,12 @@ setIsEditing(true)
 
   return (<>
     {!isEditing ? (
-    <View style={styles.date}>
+    <View style={styles.container}>
       <Text style={{ fontSize: 15 }}>Week View</Text>
       <Text style={{ fontSize: 20 }}>Todays date</Text>
       <Text style={styles.dateText}>{today.toDateString()}</Text>
-      <Text style={{ fontSize: 20 }}>Week Ending</Text>
-      <View style={styles.dateButtons}>
-        <Pressable
-  
-          onPressIn={() => {
-            changeDate("back");
-          }}
-        >
-          <Text style={styles.arrows}>⬅️</Text>
-        </Pressable>
-        <Text style={styles.dateText}>{weekEnding.toDateString()}</Text>
-        <Pressable
-        
-          onPressIn={() => {
-            changeDate("forwards");
-          }}
-        >
-          <Text style={styles.arrows}>➡️</Text>
-        </Pressable>
-      </View>
+     
+     
  
         <ScrollView style={styles.scrollView}>
           {days &&
@@ -110,7 +92,7 @@ setIsEditing(true)
                   style={styles.listItem}
                   onPress={(e) => edit(day)}
                 >
-                  <Text>{day.date && day.date.toDateString()}</Text>
+                  <Text style={styles.previewDate}>{day.date && day.date.toDateString()}</Text>
                   <Text style={styles.preview}>
                     {day.text ? day.text : "No data"}
                   </Text>
@@ -118,6 +100,26 @@ setIsEditing(true)
               );
             })}
         </ScrollView>
+         <Text style={{ fontSize: 20 }}>Week Ending</Text>
+         <View style={styles.dateButtons}>
+           <Pressable
+     
+             onPressIn={() => {
+               changeDate("back");
+             }}
+           >
+             <Text style={styles.arrows}>⬅️</Text>
+           </Pressable>
+           <Text style={styles.dateText}>{weekEnding.toDateString()}</Text>
+           <Pressable
+           
+             onPressIn={() => {
+               changeDate("forwards");
+             }}
+           >
+             <Text style={styles.arrows}>➡️</Text>
+           </Pressable>
+        </View>
         </View>
       ) : (
         <Edit

@@ -15,7 +15,6 @@ export const HomeScreen = () => {
  
   return (
     <View style={styles.container}>
-      <Text>Testing build</Text>
       <WeekView />
       </View>
 

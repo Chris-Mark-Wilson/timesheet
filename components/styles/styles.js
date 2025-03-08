@@ -1,12 +1,14 @@
  import { StyleSheet } from "react-native";
  export const styles = StyleSheet.create({
-    date: {
-      flex: 0.8,
+    container: {
+      flex: 1,
       borderWidth: 1,
       borderRadius: 10,
-      width: "90%",
+      width: "95%",
       alignItems: "center",
       justifyContent: "start",
+      backgroundColor: "#cfaa30",
+      opacity: 0.7,
     },
     dateText: {
       fontSize: 30,
@@ -57,12 +59,15 @@
   },
   preview:{
     flex:1,
-    fontSize:10,
+    fontSize:20,
     borderWidth:1,
     borderRadius:5,
     padding:5,
     width:'100%',
     
+  },
+  previewDate:{
+    fontSize:20
   },
   editView:{
     flex:1,
