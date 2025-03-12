@@ -32,5 +32,8 @@ yarn-error.*
 # local env files
 .env*.local
 
+#firebase key
+timesheet-1c345-firebase-adminsdk-fbsvc-ee1c43baa9.json
+
 # typescript
 *.tsbuildinfo

@@ -10,6 +10,18 @@ export const WeekView = () => {
   const [days,setDays]=useState([{day:'mon'},{day:'tue'},{day:'wed'},{day:'thur'},{day:'fri'},{day:'sat'},{day:'sun'}])
   const [isEditing,setIsEditing]=useState(false)
   const [currentDay,setCurrentDay]=useState({})
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permission to send notifications is required!');
+      }
+    };
+
+    requestPermissions();
+  }, []);
+  
   useEffect(() => {
     setWeekEnding((prev) => {
       const newDate = new Date(prev);
@@ -46,10 +58,6 @@ export const WeekView = () => {
 
   const changeDate = (direction) => {
     if (direction == "forwards") {
-      if (weekEnding > today) {
-        alert("you are not a time traveller");
-        return;
-      }
       setWeekEnding((prev) => {
         const newDate = new Date(prev);
         newDate.setDate(newDate.getDate() + 7);
