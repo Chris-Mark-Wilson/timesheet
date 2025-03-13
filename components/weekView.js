@@ -86,16 +86,22 @@ export const WeekView = () => {
       updateDays().then((data) => {
         console.log('days => ', data, data.length);
         setReady(true);
-        // Scroll to today's date
-        const todayIndex = data.findIndex(day => day.date.toDateString() === today.toDateString());
-        if (todayIndex !== -1 && scrollViewRef.current) {
-          const itemHeight = 150; //height of list item in styles.js
-          const scrollPosition = todayIndex * itemHeight;
-          scrollViewRef.current.scrollTo({ y: scrollPosition, animated: true });
-        }
+      
       });
     }
   }, [weekEnding, currentDay, updated]);
+
+  useEffect(()=>{
+    if(ready){
+  // Scroll to today's date
+  const todayIndex = days.findIndex(day => day.date.toDateString() === today.toDateString());
+  if (todayIndex !== -1 && scrollViewRef.current) {
+    const itemHeight = 150; //height of list item in styles.js
+    const scrollPosition = todayIndex * itemHeight;
+    scrollViewRef.current.scrollTo({ y: scrollPosition, animated: true });
+  }
+    }
+  },[ready])
 
   const changeDate = (direction) => {
     if (direction == "forwards") {
