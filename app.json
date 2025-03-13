@@ -21,7 +21,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.chrismark_wilson.timesheet",
-      "googleServicesFile":"./google-services.json"
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"

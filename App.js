@@ -31,7 +31,7 @@ export default function App() {
   useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener(
       (notification) => {
-        console.log(notification);
+        console.log('added subscription in app.js => ',notification);
       }
     );
 
@@ -46,6 +46,7 @@ export default function App() {
       }
     };
     
+    //read the database for todays date, get any notifications then schedule
 
   
 

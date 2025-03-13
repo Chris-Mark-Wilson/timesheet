@@ -7,7 +7,7 @@
       width: "95%",
       alignItems: "center",
       justifyContent: "start",
-      backgroundColor: "#cfaa30",
+      backgroundColor: "#efe2b9",
       opacity: 0.7,
     },
     dateText: {
@@ -39,7 +39,7 @@
       flex:1,
       borderWidth:1,
       width:'100%',
-      height:80
+      height:150
     },
   
   button: {

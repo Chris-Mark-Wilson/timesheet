@@ -1,0 +1,29 @@
+{
+    "project_info": {
+      "project_number": "435693284748",
+      "project_id": "timesheet-1c345",
+      "storage_bucket": "timesheet-1c345.firebasestorage.app"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:435693284748:android:805bce87005f20652fbaa9",
+          "android_client_info": {
+            "package_name": "com.chrismark_wilson.timesheet"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyAjGd4uIoLfg63czvrq88e1Flteuyo6_VA"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }

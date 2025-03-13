@@ -34,7 +34,7 @@ yarn-error.*
 
 #firebase key
 timesheet-1c345-firebase-adminsdk-fbsvc-ee1c43baa9.json
-google-services.json
+# google-services.json
 
 # typescript
 *.tsbuildinfo
