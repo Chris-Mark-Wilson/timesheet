@@ -36,22 +36,22 @@ export const WeekView = () => {
     });
   }, []);
 
-  useEffect(() => {
-    const updateVersion = async () => {
-      const keys = await AsyncStorage.getAllKeys();
-      keys.forEach(async (key) => {
-        const data = await AsyncStorage.getItem(key);
-        if (data) {
-          const parsed = JSON.parse(data);
-          if (typeof parsed != "object") {
-            await AsyncStorage.setItem(key, JSON.stringify({ text: data }));
-          }
-        }
-      });
-    };
-    updateVersion();
-    setUpdated(true);
-  }, []);
+  // useEffect(() => {
+  //   const updateVersion = async () => {
+  //     const keys = await AsyncStorage.getAllKeys();
+  //     keys.forEach(async (key) => {
+  //       const data = await AsyncStorage.getItem(key);
+  //       if (data) {
+  //         const parsed = JSON.parse(data);
+  //         if (typeof parsed != "object") {
+  //           await AsyncStorage.setItem(key, JSON.stringify({ text: data }));
+  //         }
+  //       }
+  //     });
+  //   };
+  //   updateVersion();
+  //   setUpdated(true);
+  // }, []);
 
   useEffect(() => {
     console.log('useEffect triggered');
@@ -80,14 +80,14 @@ export const WeekView = () => {
           })
         );
         setDays(newDays);
-        return newDays;
+
       };
 
-      updateDays().then((data) => {
-        console.log('days => ', data, data.length);
+      updateDays();
+
         setReady(true);
       
-      });
+      
     }
   }, [weekEnding, currentDay, updated]);
 
