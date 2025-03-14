@@ -87,7 +87,7 @@ export const WeekView = () => {
 
       }
       catch(e){
-        alert('failed promise.all')
+        alert('failed promise.all',e)
       }
         setDays(newDays);
       alert('finished promise.all')
