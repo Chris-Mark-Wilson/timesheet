@@ -83,9 +83,9 @@ export const WeekView = () => {
 
       };
 
-      updateDays();
+      updateDays().then(()=>{setReady(true)});
 
-        setReady(true);
+     
       
       
     }
@@ -133,7 +133,7 @@ export const WeekView = () => {
           <Text style={styles.dateText}>{today.toDateString()}</Text>
 
           <ScrollView style={styles.scrollView} ref={scrollViewRef}>
-            { days &&
+            { ready &&
               days.map((day) => {
                 return (
                   <Pressable
