@@ -8,7 +8,7 @@ import { styles } from "./styles/styles";
 export const WeekView = () => {
   const today = new Date();
   const [weekEnding, setWeekEnding] = useState(today);
-  const [days, setDays] = useState([{ day: 'mon' }, { day: 'tue' }, { day: 'wed' }, { day: 'thur' }, { day: 'fri' }, { day: 'sat' }, { day: 'sun' }]);
+  const [days, setDays] = useState([{ day: 'mon',date:new Date() }, { day: 'tue',date:new Date() }, { day: 'wed',date:new Date() }, { day: 'thur',date:new Date() }, { day: 'fri',date:new Date() }, { day: 'sat',date:new Date() }, { day: 'sun',date:new Date() }]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentDay, setCurrentDay] = useState({});
   const [updated, setUpdated] = useState(false);
