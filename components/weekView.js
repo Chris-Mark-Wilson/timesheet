@@ -55,7 +55,7 @@ export const WeekView = () => {
 
   useEffect(() => {
     console.log('useEffect triggered');
-    if (days && updated) {
+    if (days ) {
       console.log('useEffect with days and updated');
 
       const updateDays = async () => {
