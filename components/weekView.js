@@ -36,26 +36,19 @@ export const WeekView = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   const updateVersion = async () => {
-  //     const keys = await AsyncStorage.getAllKeys();
-  //     keys.forEach(async (key) => {
-  //       const data = await AsyncStorage.getItem(key);
-  //       if (data) {
-  //         const parsed = JSON.parse(data);
-  //         if (typeof parsed != "object") {
-  //           await AsyncStorage.setItem(key, JSON.stringify({ text: data }));
-  //         }
-  //       }
-  //     });
-  //   };
-  //   updateVersion();
-  //   setUpdated(true);
-  // }, []);
+  useEffect(() => {
+ const clear = async()=>{
+  await AsyncStorage.clear()
+ }
+ clear().then(()=>{
+  setUpdated(true);
+ })
+    
+  }, []);
 
   useEffect(() => {
     console.log('useEffect triggered');
-    if (days ) {
+    if (days && updated ) {
       console.log('useEffect with days and updated');
 
       let newDays
