@@ -58,32 +58,45 @@ export const WeekView = () => {
     if (days ) {
       console.log('useEffect with days and updated');
 
+      let newDays
       const updateDays = async () => {
-        const newDays = await Promise.all(
-          days.map(async (day, index) => {
-            const newDate = new Date(weekEnding);
-            newDate.setDate(newDate.getDate() + index - 6);
-            const newDay = { ...day, date: newDate };
-            const data = await AsyncStorage.getItem(newDay.date.toDateString());
-            if (data) {
-              console.log('we have data', data, newDay.date);
-              const parsed = JSON.parse(data);
-              console.log('parsed => ', parsed);
-              newDay.text = parsed.text;
-              newDay.notificationText = parsed.notificationText ?? '';
-            } else {
-              newDay.text = '';
-              newDay.notificationText = '';
-              console.log('no data');
-            }
-            return newDay;
-          })
-        );
-        setDays(newDays);
+        try{
+         newDays = await Promise.all(
 
+                days.map(async (day, index) => {
+                  const newDate = new Date(weekEnding);
+                  newDate.setDate(newDate.getDate() + index - 6);
+                  const newDay = { ...day, date: newDate };
+          
+                  const data = await AsyncStorage.getItem(newDay.date.toDateString());
+                  if (data) {
+                    console.log('we have data', data, newDay.date);
+                    const parsed = JSON.parse(data);
+                    console.log('parsed => ', parsed);
+                    newDay.text = parsed.text ?? '';
+                    newDay.notificationText = parsed.notificationText ?? '';
+                  } else {
+                    newDay.text = '';
+                    newDay.notificationText = '';
+                    console.log('no data');
+                  }
+                  return newDay;
+                
+                })
+        );
+
+      }
+      catch(e){
+        alert('failed promise.all')
+      }
+        setDays(newDays);
+      alert('finished promise.all')
       };
 
-      updateDays().then(()=>{setReady(true)});
+      updateDays().then(()=>{
+        alert('in .then')
+        setReady(true)
+      });
 
      
       
