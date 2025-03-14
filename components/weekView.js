@@ -11,7 +11,7 @@ export const WeekView = () => {
   const [days, setDays] = useState([{ day: 'mon',date:new Date() }, { day: 'tue',date:new Date() }, { day: 'wed',date:new Date() }, { day: 'thur',date:new Date() }, { day: 'fri',date:new Date() }, { day: 'sat',date:new Date() }, { day: 'sun',date:new Date() }]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentDay, setCurrentDay] = useState({});
-  const [updated, setUpdated] = useState(false);
+  const [updated, setUpdated] = useState(true);
   const [ready, setReady] = useState(false);
   const scrollViewRef = useRef(null);
 
@@ -36,20 +36,22 @@ export const WeekView = () => {
     });
   }, []);
 
-  useEffect(() => {
- const clear = async()=>{
-  await AsyncStorage.clear()
- }
- clear().then(()=>{
-  setUpdated(true);
- })
+
+  // memory clear function for testing, set updated to false in useState to enable
+//   useEffect(() => {
+//  const clear = async()=>{
+//   await AsyncStorage.clear()
+//  }
+//  clear().then(()=>{
+//   setUpdated(true);
+//  })
     
-  }, []);
+//   }, []);
 
   useEffect(() => {
-    console.log('useEffect triggered');
+    // console.log('useEffect triggered');
     if (days && updated ) {
-      console.log('useEffect with days and updated');
+      // console.log('useEffect with days and updated');
 
       let newDays
       const updateDays = async () => {
@@ -63,15 +65,15 @@ export const WeekView = () => {
           
                   const data = await AsyncStorage.getItem(newDay.date.toDateString());
                   if (data) {
-                    console.log('we have data', data, newDay.date);
+                    // console.log('we have data', data, newDay.date);
                     const parsed = JSON.parse(data);
-                    console.log('parsed => ', parsed);
+                    // console.log('parsed => ', parsed);
                     newDay.text = parsed.text ?? '';
                     newDay.notificationText = parsed.notificationText ?? '';
                   } else {
                     newDay.text = '';
                     newDay.notificationText = '';
-                    console.log('no data');
+                    // console.log('no data');
                   }
                   return newDay;
                 
@@ -80,14 +82,14 @@ export const WeekView = () => {
 
       }
       catch(e){
-        alert(`failed promise all ${e}`)
+        alert(`Failed to obtain data from device  ${e}`)
       }
         setDays(newDays);
-      alert('finished promise.all')
+      // alert('finished promise.all')
       };
 
       updateDays().then(()=>{
-        alert('in .then')
+        // alert('in .then')
         setReady(true)
       });
 
@@ -97,17 +99,17 @@ export const WeekView = () => {
     }
   }, [weekEnding, currentDay, updated]);
 
-  // useEffect(()=>{
-  //   if(ready){
-  // // Scroll to today's date
-  // const todayIndex = days.findIndex(day => day.date.toDateString() === today.toDateString());
-  // if (todayIndex !== -1 && scrollViewRef.current) {
-  //   const itemHeight = 150; //height of list item in styles.js
-  //   const scrollPosition = todayIndex * itemHeight;
-  //   scrollViewRef.current.scrollTo({ y: scrollPosition, animated: true });
-  // }
-  //   }
-  // },[ready])
+  useEffect(()=>{
+    if(ready){
+  // Scroll to today's date
+  const todayIndex = days.findIndex(day => day.date.toDateString() === today.toDateString());
+  if (todayIndex !== -1 && scrollViewRef.current) {
+    const itemHeight = 150; //height of list item in styles.js
+    const scrollPosition = todayIndex * itemHeight;
+    scrollViewRef.current.scrollTo({ y: scrollPosition, animated: true });
+  }
+    }
+  },[ready])
 
   const changeDate = (direction) => {
     if (direction == "forwards") {
