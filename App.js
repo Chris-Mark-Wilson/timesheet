@@ -9,6 +9,14 @@ import * as Notifications from 'expo-notifications'
 
 const Stack = createNativeStackNavigator();
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
 function RootStack() {
   return (
     <Stack.Navigator>
