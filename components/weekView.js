@@ -5,6 +5,14 @@ import { Edit } from "./edit";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from "./styles/styles";
 
+import * as Notifications from 'expo-notifications';
+
+
+
+
+
+
+
 export const WeekView = () => {
   const today = new Date();
   const [weekEnding, setWeekEnding] = useState(today);
@@ -24,6 +32,25 @@ export const WeekView = () => {
     };
 
     requestPermissions();
+
+    const subscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log('Notification received:', notification);
+      }
+    );
+
+    // Schedule a test notification to be triggered 5 seconds after the app starts
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Test Notification',
+        body: 'This is a test notification.',
+      },
+      trigger: {
+        seconds: 5,
+      },
+    });
+
+    return () => subscription.remove();
   }, []);
 
   useEffect(() => {
