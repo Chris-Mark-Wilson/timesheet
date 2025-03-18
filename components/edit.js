@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   saveNotification,
   removeNotification,
+  schedulePushNotification
 } from "../functions/notifications.js";
 export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
   const [tempText, setTempText] = useState(
@@ -36,8 +37,16 @@ export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
       if (tempNotificationText.length) {
         try {
           console.log(currentDay.date);
-          await saveNotification(currentDay.date, tempNotificationText);
-          console.log('scheduled notification')
+          await saveNotification(currentDay.date,tempNotificationText);
+          console.log('scheduled notification in asyncStorage')
+          try{
+          
+            const response=await schedulePushNotification('Reminder',tempNotificationText,{},currentDay.date)
+          console.log('response=>',response?.data?.id)
+            }
+          catch(e){
+            console.log('ERROR WITH SCHEDULE',e)
+          }
         } catch (e) {
           alert(`Error setting notification ${e}`);
         }
@@ -73,6 +82,7 @@ export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
         onChangeText={(text) => setTempText(text)}
         value={tempText}
         style={styles.textInput}
+        placeholder={'Enter diary entry'}
       />
 
       <Text style={{ fontSize: 20 }}>Set notification</Text>
@@ -85,6 +95,7 @@ export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
         onChangeText={(text) => setTempNotificationText(text)}
         value={tempNotificationText}
         style={{ ...styles.textInput, flex: 0.4 }}
+        placeholder={'Set a notification'}
       />
 
       <View style={styles.navButtons}>

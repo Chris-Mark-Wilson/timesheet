@@ -28,7 +28,15 @@ export const WeekView = () => {
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== 'granted') {
         alert('Permission to send notifications is required!');
+        return;
       }
+
+      // Get the token that identifies this device
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log('Push notification token:', token);
+
+      // Store the token in AsyncStorage or send it to your backend server
+      await AsyncStorage.setItem('pushToken', token);
     };
 
     requestPermissions();
@@ -38,19 +46,6 @@ export const WeekView = () => {
         console.log('Notification received:', notification);
       }
     );
-
-    // Schedule a test notification to be triggered 5 seconds after the app starts
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Test Notification',
-        body: 'This is a test notification.',
-      },
-      trigger: {
-        seconds: 5,
-      },
-    });
-
-    Notifications.getAllScheduledNotificationsAsync().then(result=>{console.log('notifications',result)})
 
     return () => subscription.remove();
   }, []);
