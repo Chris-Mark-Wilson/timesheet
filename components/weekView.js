@@ -50,6 +50,8 @@ export const WeekView = () => {
       },
     });
 
+    Notifications.getAllScheduledNotificationsAsync().then(result=>{console.log('notifications',result)})
+
     return () => subscription.remove();
   }, []);
 

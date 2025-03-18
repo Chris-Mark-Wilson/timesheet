@@ -1,11 +1,12 @@
 import * as Notifications from 'expo-notifications'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-
-export const saveNotification = async (date, notificationText) => {
+// what the fuck is going on here the trigger is setting date to todays
+//date irrespective of notificationDate???
+export const saveNotification = async (notificationDate, notificationText) => {
     const data = { notificationText };
-    await AsyncStorage.setItem(date.toDateString(), JSON.stringify(data));
-  
+    await AsyncStorage.setItem(notificationDate.toDateString(), JSON.stringify(data));
+  console.log('in notifiactions',new Date(notificationDate.setHours(6, 0, 0, 0)))
     // Schedule the notification
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -13,19 +14,14 @@ export const saveNotification = async (date, notificationText) => {
         body: notificationText,
       },
       trigger: {
-        date: new Date(date.setHours(6, 0, 0, 0)), // Schedule for 6 AM on the specified date
+        date: new Date(notificationDate.setHours(6, 0, 0, 0)), // Schedule for 6 AM on the specified date
       },
     });
   };
   
   export const removeNotification = async (date) => {
     
-    // const item = await AsyncStorage.getItem(date.toDateString());
-    // if (item) {
-    //   const parsed = JSON.parse(item);
-    //   parsed.notificationText = '';
-    //   await AsyncStorage.setItem(date.toDateString(), JSON.stringify(parsed));
-    // }
+
   
     // Cancel the scheduled notification
     const notifications = await Notifications.getAllScheduledNotificationsAsync();

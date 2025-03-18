@@ -35,6 +35,7 @@ export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
       });
       if (tempNotificationText.length) {
         try {
+          console.log(currentDay.date);
           await saveNotification(currentDay.date, tempNotificationText);
           console.log('scheduled notification')
         } catch (e) {
