@@ -3,10 +3,15 @@ import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  saveNotification,
-  removeNotification,
-  schedulePushNotification
-} from "../functions/notifications.js";
+  removeScheduledNotification,
+  schedulePushNotification,
+  deletePushNotification
+} from "../functions/pushNotifications.js";
+import { getTime } from "../functions/timePicker.js";
+import { resetCurrentDay, saveDayInStorage } from "../functions/storage.js";
+
+
+
 export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
   const [tempText, setTempText] = useState(
     currentDay.text ? currentDay.text : ""
@@ -15,45 +20,47 @@ export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
     currentDay.notificationText ? currentDay.notificationText : ""
   );
 
+  const [notificationTime,setNotificationTime]=useState(currentDay.notificationTime?currentDay.notificationTime:new Date())
+  const [isTimeSet,setIsTimeSet]=useState(false)
+
   const save = async () => {
+    console.log('in save')
+    if(!isTimeSet && tempNotificationText?.length){
+      console.log('getting time');
+      const t=getTime(notificationTime,setNotificationTime,setIsTimeSet);
+      console.log(t)
+      // return
+    }
+    else {
+    
     try {
-      await AsyncStorage.setItem(
-        currentDay.date.toDateString(),
-        JSON.stringify({
-          text: tempText ?? "",
-          notificationText: tempNotificationText ?? "",
-        })
-      );
-      console.log("Data saved");
-      setCurrentDay((prev) => {
-        const newDay = { ...prev };
-        newDay.text = tempText;
-        if (tempNotificationText.length) {
-          console.log("setting notification text");
-          newDay.notificationText = tempNotificationText;
-        }
-        return newDay;
-      });
+      let response;
+      response = await saveDayInStorage(currentDay,tempNotificationText,notificationTime);
+      alert(response)
+    
+      resetCurrentDay(setCurrentDay);
+
+
       if (tempNotificationText.length) {
-        try {
-          console.log(currentDay.date);
-          await saveNotification(currentDay.date,tempNotificationText);
-          console.log('scheduled notification in asyncStorage')
-          try{
-          
-            const response=await schedulePushNotification('Reminder',tempNotificationText,{},currentDay.date)
-          console.log('response=>',response?.data?.id)
-            }
-          catch(e){
-            console.log('ERROR WITH SCHEDULE',e)
-          }
-        } catch (e) {
-          alert(`Error setting notification ${e}`);
-        }
+        //get a time for the notification
+      response=await schedulePushNotification('Reminder',tempNotificationText,{},currentDay.date)
+      alert (response)
+      
+     
       } else {
         try {
-          await removeNotification(currentDay.date);
-          console.log('removed notification')
+          const data=await AsyncStorage.getItem(currentDay.date.toDateString())
+          console.log('data',data)
+          if(data){
+            if (data?.notificationText?.length){
+            let response = await removeScheduledNotification(currentDay.date);
+            console.log('removed notification from AsyncStorage',response)
+             response=await deletePushNotification(currentDay.date)
+             console.log('response => ',JSON.stringify(response,null,2))
+             console.log('unschedule response =>',response?.message)
+             alert(`Removed notifications`)
+          }
+         }
         } catch (e) {
           alert(`Error removing notification ${e}`);
         }
@@ -62,8 +69,15 @@ export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
       Alert.alert("Error saving data");
       console.log(e);
     }
+  }
     setIsEditing(false);
+    setIsTimeSet(false)
   };
+
+
+
+
+
 
 
 

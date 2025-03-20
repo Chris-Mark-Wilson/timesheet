@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Button } from "react-native";
 import { Pressable } from "react-native";
 import { useEffect, useState, useRef } from "react";
 import { Edit } from "./edit";
@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from "./styles/styles";
 
 import * as Notifications from 'expo-notifications';
+import { clearAllScheduledNotifications } from "../functions/pushNotifications";
 
 
 
@@ -160,6 +161,10 @@ export const WeekView = () => {
     <>
       {!isEditing ? (
         <View style={styles.container}>
+          <Button
+          title='Clear all scheduled'
+          onPress={()=>{clearAllScheduledNotifications().then(response=>{alert(response.message)})}}
+          />
           <Text style={{ fontSize: 15 }}>Week View</Text>
           <Text style={{ fontSize: 20 }}>Todays date</Text>
           <Text style={styles.dateText}>{today.toDateString()}</Text>
