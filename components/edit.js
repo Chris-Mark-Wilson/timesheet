@@ -7,12 +7,16 @@ import {
   schedulePushNotification,
   deletePushNotification
 } from "../functions/pushNotifications.js";
-import { getTime } from "../functions/timePicker.js";
+
 import { resetCurrentDay, saveDayInStorage } from "../functions/storage.js";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 
 
 export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
+  //today is a DATE object, i.e. todays date
+  //current day is just the day OBJECT being edited passed into the component
+
   const [tempText, setTempText] = useState(
     currentDay.text ? currentDay.text : ""
   );
@@ -20,31 +24,60 @@ export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
     currentDay.notificationText ? currentDay.notificationText : ""
   );
 
-  const [notificationTime,setNotificationTime]=useState(currentDay.notificationTime?currentDay.notificationTime:new Date())
-  const [isTimeSet,setIsTimeSet]=useState(false)
+  const [notificationTime,setNotificationTime]=useState(currentDay.notifcationTime??new Date())
+  const [isTimeSet, setIsTimeSet] = useState(false);
 
   const save = async () => {
-    console.log('in save')
-    if(!isTimeSet && tempNotificationText?.length){
-      console.log('getting time');
-      const t=getTime(notificationTime,setNotificationTime,setIsTimeSet);
-      console.log(t)
-      // return
+
+    const setTime=(event,time)=>{
+      console.log('setting notification time')
+setNotificationTime(time)
+      setIsTimeSet(true)
     }
-    else {
-    
+ 
+    //is There a notification and a time set for the notification?
+    if(!isTimeSet && tempNotificationText?.length){
+     //Get time for notification with dateTimePicker
+      //this picker cannot be moved from this component
+      DateTimePickerAndroid.open({
+        value:new Date(),
+        onChange:setTime,
+        mode:'time',
+        display:'spinner'
+  
+        })
+
+        return;
+      }
+    const now= new Date()
+    console.log(notificationTime,now)
+      //cannot set a notification time in the past
+      if(isTimeSet && notificationTime<now && currentDay.date<new Date()){
+        console.log('not in the past')
+        alert('Notfication time cannot be in the past');
+        setIsTimeSet(false)
+        return;
+      }
+      
+      //either no notification or time is set for the notfication if there is one
     try {
+      console.log('saving')
       let response;
-      response = await saveDayInStorage(currentDay,tempNotificationText,notificationTime);
+      response = await saveDayInStorage(currentDay,tempNotificationText,notificationTime,tempText);
       alert(response)
     
-      resetCurrentDay(setCurrentDay);
+      resetCurrentDay(setCurrentDay,tempText,tempNotificationText,notificationTime);//set day in app *important*
 
 
       if (tempNotificationText.length) {
-        //get a time for the notification
-      response=await schedulePushNotification('Reminder',tempNotificationText,{},currentDay.date)
-      alert (response)
+       
+        
+      const scheduleTime=currentDay.date.setHours(notificationTime.getHours(),notificationTime.getMinutes(),0,0)
+      console.log('schedule time =>',scheduleTime)
+
+      response=await schedulePushNotification('Reminder',tempNotificationText,{},scheduleTime)
+      console.log(JSON.stringify(response,null,2))
+      alert (response.message)
       
      
       } else {
@@ -69,7 +102,7 @@ export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
       Alert.alert("Error saving data");
       console.log(e);
     }
-  }
+  
     setIsEditing(false);
     setIsTimeSet(false)
   };
@@ -100,17 +133,19 @@ export const Edit = ({ today, currentDay, setCurrentDay, setIsEditing }) => {
       />
 
       <Text style={{ fontSize: 20 }}>Set notification</Text>
-
-      <TextInput
+      {/* editing today or anytime in future? show notification text input*/}
+      {currentDay.date>today-86400000 && 
+       <TextInput
         editable
         multiline
-        numberOfLines={40}
-        maxLength={500}
+        numberOfLines={1}
+        maxLength={50}
         onChangeText={(text) => setTempNotificationText(text)}
         value={tempNotificationText}
         style={{ ...styles.textInput, flex: 0.4 }}
         placeholder={'Set a notification'}
       />
+}
 
       <View style={styles.navButtons}>
         <Pressable style={styles.button} onPress={() => setIsEditing(false)}>

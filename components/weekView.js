@@ -62,16 +62,7 @@ export const WeekView = () => {
   }, []);
 
 
-  // memory clear function for testing, set updated to false in useState to enable
-//   useEffect(() => {
-//  const clear = async()=>{
-//   await AsyncStorage.clear()
-//  }
-//  clear().then(()=>{
-//   setUpdated(true);
-//  })
-    
-//   }, []);
+
 
   useEffect(() => {
     // console.log('useEffect triggered');
@@ -161,10 +152,13 @@ export const WeekView = () => {
     <>
       {!isEditing ? (
         <View style={styles.container}>
+
+          {/* temp clear all button */}
           <Button
           title='Clear all scheduled'
-          onPress={()=>{clearAllScheduledNotifications().then(response=>{alert(response.message)})}}
+          onPress={()=>{clearAllScheduledNotifications().then(response=>alert(`${response[0].message} - ${response[1]}`)).catch(e=>alert(`Problem - ${e}`))}}
           />
+          
           <Text style={{ fontSize: 15 }}>Week View</Text>
           <Text style={{ fontSize: 20 }}>Todays date</Text>
           <Text style={styles.dateText}>{today.toDateString()}</Text>

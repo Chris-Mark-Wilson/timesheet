@@ -1,4 +1,6 @@
- export const saveDayInStorage=async(currentDay,tempNotificationText,notificationTime)=>{
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export const saveDayInStorage=async(currentDay,tempNotificationText,notificationTime,tempText)=>{
     try{
         await AsyncStorage.setItem(
             currentDay.date.toDateString(),
@@ -8,14 +10,14 @@
               notificationTime: notificationTime ?? undefined
             })
           );
-         return 'Saved';
+         return 'Saved in device storage';
     }
     catch(e){
         return Promise.reject(e)
     }
 }
 
-export const resetCurrentDay=(setCurrentDay)=>{
+export const resetCurrentDay=(setCurrentDay,tempText,tempNotificationText,notificationTime)=>{
         setCurrentDay((prev) => {
         const newDay = { ...prev };
         newDay.text = tempText;

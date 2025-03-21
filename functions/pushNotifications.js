@@ -1,20 +1,17 @@
-import * as Notifications from 'expo-notifications'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// what the fuck is going on here the trigger is setting date to todays
-//date irrespective of notificationDate???
+export const removeScheduledNotification = async (date) => {
+  // Cancel the scheduled notification
+  const notifications = await Notifications.getAllScheduledNotificationsAsync();
+  notifications.forEach(notification => {
+    if (notification.trigger.date === date.toISOString()) {
+      Notifications.cancelScheduledNotificationAsync(notification.identifier);
+    }
+  });
+};
 
-  
-  export const removeScheduledNotification = async (date) => {
-    // Cancel the scheduled notification
-    const notifications = await Notifications.getAllScheduledNotificationsAsync();
-    notifications.forEach(notification => {
-      if (notification.trigger.date === date.toISOString()) {
-        Notifications.cancelScheduledNotificationAsync(notification.identifier);
-      }
-    });
-  };
-  const renderUrl = 'https://timesheet-ofqs.onrender.com'; // Replace with your Render URL
+const renderUrl = 'https://timesheet-ofqs.onrender.com'; // Replace with your Render URL
 
 export const schedulePushNotification = async (title, body, data, scheduleTime) => {
   const token = await AsyncStorage.getItem('pushToken');
@@ -23,18 +20,18 @@ export const schedulePushNotification = async (title, body, data, scheduleTime) 
     return;
   }
 
-  const time = new Date(scheduleTime)
-  time.setHours(15,48,0,0);
-  console.log('time',time) 
+  const time = new Date(scheduleTime);
+  console.log('time', time);
+
   const messagePayload = {
     token,
     title,
     body,
     data,
-    scheduleTime:time.toISOString(),
+    scheduleTime: time.toISOString(),
   };
 
-   const response = await fetch(`${renderUrl}/schedule-notification`, {
+  const response = await fetch(`${renderUrl}/schedule-notification`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -42,14 +39,22 @@ export const schedulePushNotification = async (title, body, data, scheduleTime) 
     },
     body: JSON.stringify(messagePayload),
   });
-  return response.json()
+
+  if (!response.ok) {
+    const errorResponse = await response.json();
+    console.log('Error:', errorResponse.message);
+    return Promise.reject(new Error(errorResponse.message));
+  }
+
+  return response.json();
 };
 
-export const deletePushNotification = async (scheduleTime)=>{
-  const time = new Date(scheduleTime)
+export const deletePushNotification = async (scheduleTime) => {
+  const time = new Date(scheduleTime);
   const messagePayload = {
-     scheduleTime:time.toISOString(),
+    scheduleTime: time.toISOString(),
   };
+
   const response = await fetch(`${renderUrl}/remove-notification`, {
     method: 'POST',
     headers: {
@@ -58,17 +63,39 @@ export const deletePushNotification = async (scheduleTime)=>{
     },
     body: JSON.stringify(messagePayload),
   });
-  return response.json()
 
-}
+  if (!response.ok) {
+    const errorResponse = await response.json();
+    console.log('Error:', errorResponse.message);
+    return Promise.reject(new Error(errorResponse.message));
+  }
 
-export const clearAllScheduledNotifications = async () =>{
-  const response= await fetch(`${renderUrl}/remove-all-notifications`,{
-    method:'POST',
-    headers:{
-      Accept:'application/json',
-      'Content-Type': 'application/json',
-    }
-  })
   return response.json();
-}
+};
+
+export const clearAllScheduledNotifications = async () => {
+  try {
+    const response = await fetch(`${renderUrl}/remove-all-notifications`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      console.log('Error:', errorResponse.message);
+      return Promise.reject(new Error(errorResponse.message));
+    }
+
+    const jsonResponse = await response.json();
+    console.log(JSON.stringify(jsonResponse, null, 2), jsonResponse.message);
+
+    const result = await AsyncStorage.clear();
+    return [jsonResponse, result ?? 'and frontend'];
+  } catch (e) {
+    console.log(e);
+    return Promise.reject(e);
+  }
+};
